@@ -92,9 +92,9 @@ function App() {
   }, [checkboxItems])
 
   return (
-    <div className="App">
+    <div className="App pt-10">
       {showPopup && <PopupForm onClose={() => setShowpopup(false)} />}
-      <header className="App-header">
+      <header>
         <div className="max-w-screen-xl mx-auto px-4 md:px-8">
           <div className="items-start justify-between md:flex">
             <div className="max-w-lg">
