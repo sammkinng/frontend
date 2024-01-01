@@ -16,6 +16,10 @@ const PopupForm: React.FC<PopupFormProps> = ({ onClose }) => {
     const [phoneError, setPhoneError] = useState(false)
     const [mailError, setMailError] = useState(false)
 
+    const addRow=()=>{
+        console.log('Row Added!')
+      }
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
         if (e.target.name === 'email') {
@@ -37,6 +41,7 @@ const PopupForm: React.FC<PopupFormProps> = ({ onClose }) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        addRow()
         console.log('Form submitted:', formData);
         onClose();
     };

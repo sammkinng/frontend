@@ -43,7 +43,7 @@ function App() {
     },
   ]
 
-  const [editableIndex, setEditableIndex] = useState(1)
+  const [editableIndex, setEditableIndex] = useState<null | number>(null)
   const [showPopup, setShowpopup] = useState(false)
 
   const [areAllChecked, setAllChecked] = useState(false)
@@ -62,6 +62,18 @@ function App() {
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, idx: number) => {
     setAllChecked(false)
     setCheckboxItem({ ...checkboxItems, [`checkbox${idx}`]: e.target.checked })
+  }
+
+  const deleteRow=()=>{
+    console.log('Row Deleted!')
+  }
+
+  const upDateRow=()=>{
+    console.log('Row Updated!')
+  }
+
+  const sendMail=()=>{
+    console.log('mail sent!')
   }
 
   useEffect(() => {
@@ -91,18 +103,16 @@ function App() {
                 Redpositive Assignment      </p>
             </div>
             <div className="mt-3 md:mt-0 flex gap-4">
-              <a onClick={() => setShowpopup(true)}
-                href="javascript:void(0)"
+              <button onClick={() => setShowpopup(true)}
                 className="inline-block px-4 py-2 text-white duration-150 font-medium bg-indigo-600 rounded-lg hover:bg-indigo-500 active:bg-indigo-700 md:text-sm"
               >
                 Add Row
-              </a>
-              <a
-                href="javascript:void(0)"
+              </button>
+              <button onClick={()=>sendMail()}
                 className="inline-block px-4 py-2 text-white duration-150 font-medium bg-red-600 rounded-lg hover:bg-red-500 active:bg-red-700 md:text-sm"
               >
                 Send Mail
-              </a>
+              </button>
             </div>
           </div>
           <div className="mt-12 shadow-sm border rounded-lg overflow-x-auto">
@@ -153,10 +163,21 @@ function App() {
                       <td className={`px-6 py-4 whitespace-nowrap ${editableIndex === idx ? "text-indigo-600" : ""}`} contentEditable={editableIndex === idx}>{item.phone}</td>
                       <td className={`px-6 py-4 whitespace-nowrap ${editableIndex === idx ? "text-indigo-600" : ""}`} contentEditable={editableIndex === idx}>{item.hobbies}</td>
                       <td className="text-right px-6 whitespace-nowrap">
-                        <a href="javascript:void()" className="py-2 px-3 font-medium text-indigo-600 hover:text-indigo-500 duration-150 hover:bg-gray-50 rounded-lg">
+                        <button onClick={()=>{
+                          if(editableIndex===idx){
+                            upDateRow()
+                          }
+                          else{
+                            setEditableIndex(idx)
+                          }
+                        }} className="py-2 px-3 font-medium text-indigo-600 hover:text-indigo-500 duration-150 hover:bg-gray-50 rounded-lg">
                           {editableIndex === idx ? 'Save' : 'Edit'}
-                        </a>
-                        <button className="py-2 leading-none px-3 font-medium text-red-600 hover:text-red-500 duration-150 hover:bg-gray-50 rounded-lg">
+                        </button>
+                        <button onClick={()=>{
+                          if(window.confirm("Are you sure to delete this row?")){
+                            deleteRow()
+                          }
+                        }} className="py-2 leading-none px-3 font-medium text-red-600 hover:text-red-500 duration-150 hover:bg-gray-50 rounded-lg">
                           Delete
                         </button>
                       </td>
