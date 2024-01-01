@@ -3,9 +3,9 @@ import { TableItem } from '../App';
 
 interface PopupFormProps {
     onClose: () => void;
-  }
+}
 
-const PopupForm:React.FC<PopupFormProps> = ({ onClose }) => {
+const PopupForm: React.FC<PopupFormProps> = ({ onClose }) => {
     const [formData, setFormData] = useState<TableItem>({
         name: '',
         email: '',
@@ -16,7 +16,7 @@ const PopupForm:React.FC<PopupFormProps> = ({ onClose }) => {
     const [phoneError, setPhoneError] = useState(false)
     const [mailError, setMailError] = useState(false)
 
-    const handleChange = (e :React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
         if (e.target.name === 'email') {
             if (!validateEmail(e.target.value)) {
@@ -35,18 +35,18 @@ const PopupForm:React.FC<PopupFormProps> = ({ onClose }) => {
         }
     };
 
-    const handleSubmit = (e:React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         console.log('Form submitted:', formData);
         onClose();
     };
 
-    function validateEmail(email:string) {
+    function validateEmail(email: string) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     }
 
-    function validatePhoneNumber(phoneNumber:string) {
+    function validatePhoneNumber(phoneNumber: string) {
         // Ensure that the phone number contains only numeric characters
         const numericRegex = /^[0-9]+$/;
 

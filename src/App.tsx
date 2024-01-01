@@ -43,6 +43,7 @@ function App() {
     },
   ]
 
+  const [editableIndex, setEditableIndex] = useState(1)
   const [showPopup, setShowpopup] = useState(false)
 
   const [areAllChecked, setAllChecked] = useState(false)
@@ -145,14 +146,15 @@ function App() {
                           >
                           </label>
                         </div>
-                        {item.name}
+                        <div contentEditable={editableIndex === idx} className={`${editableIndex === idx ? "text-indigo-600" : ""}`}>
+                          {item.name}</div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">{item.email}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{item.phone}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{item.hobbies}</td>
+                      <td className={`px-6 py-4 whitespace-nowrap ${editableIndex === idx ? "text-indigo-600" : ""}`} contentEditable={editableIndex === idx}>{item.email}</td>
+                      <td className={`px-6 py-4 whitespace-nowrap ${editableIndex === idx ? "text-indigo-600" : ""}`} contentEditable={editableIndex === idx}>{item.phone}</td>
+                      <td className={`px-6 py-4 whitespace-nowrap ${editableIndex === idx ? "text-indigo-600" : ""}`} contentEditable={editableIndex === idx}>{item.hobbies}</td>
                       <td className="text-right px-6 whitespace-nowrap">
                         <a href="javascript:void()" className="py-2 px-3 font-medium text-indigo-600 hover:text-indigo-500 duration-150 hover:bg-gray-50 rounded-lg">
-                          Edit
+                          {editableIndex === idx ? 'Save' : 'Edit'}
                         </a>
                         <button className="py-2 leading-none px-3 font-medium text-red-600 hover:text-red-500 duration-150 hover:bg-gray-50 rounded-lg">
                           Delete
