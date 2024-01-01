@@ -1,48 +1,49 @@
 import { useEffect, useState } from "react"
 import './App.css';
+import PopupForm from "./components/Popup";
 
-interface TableItem {
+export interface TableItem {
   name: string;
   email: string;
-  position: string;
-  salary: string;
+  phone: string;
+  hobbies: string;
 }
 
 function App() {
-  const tableItems:TableItem[] = [
+  const tableItems: TableItem[] = [
     {
       name: "Liam James",
       email: "liamjames@example.com",
-      position: "Software engineer",
-      salary: "$100K"
+      phone: "Software engineer",
+      hobbies: "$100K"
     },
     {
       name: "Olivia Emma",
       email: "oliviaemma@example.com",
-      position: "Product designer",
-      salary: "$90K"
+      phone: "Product designer",
+      hobbies: "$90K"
     },
     {
       name: "William Benjamin",
       email: "william.benjamin@example.com",
-      position: "Front-end developer",
-      salary: "$80K"
+      phone: "Front-end developer",
+      hobbies: "$80K"
     },
     {
       name: "Henry Theodore",
       email: "henrytheodore@example.com",
-      position: "Laravel engineer",
-      salary: "$120K"
+      phone: "Laravel engineer",
+      hobbies: "$120K"
     },
     {
       name: "Amelia Elijah",
       email: "amelia.elijah@example.com",
-      position: "Open source manager",
-      salary: "$75K"
+      phone: "Open source manager",
+      hobbies: "$75K"
     },
   ]
 
-  const [showPopup,setShowpopup]=useState(false)
+  const [showPopup, setShowpopup] = useState(false)
 
   const [areAllChecked, setAllChecked] = useState(false)
   let [checkboxItems, setCheckboxItem] = useState<{ [key: string]: boolean }>({});
@@ -57,7 +58,7 @@ function App() {
   }
 
   // Update checked value
-  const handleCheckboxChange = (e:React.ChangeEvent<HTMLInputElement>, idx:number) => {
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, idx: number) => {
     setAllChecked(false)
     setCheckboxItem({ ...checkboxItems, [`checkbox${idx}`]: e.target.checked })
   }
@@ -79,6 +80,7 @@ function App() {
 
   return (
     <div className="App">
+      {showPopup && <PopupForm onClose={() => setShowpopup(false)} />}
       <header className="App-header">
         <div className="max-w-screen-xl mx-auto px-4 md:px-8">
           <div className="items-start justify-between md:flex">
@@ -88,7 +90,7 @@ function App() {
                 Redpositive Assignment      </p>
             </div>
             <div className="mt-3 md:mt-0 flex gap-4">
-              <a
+              <a onClick={() => setShowpopup(true)}
                 href="javascript:void(0)"
                 className="inline-block px-4 py-2 text-white duration-150 font-medium bg-indigo-600 rounded-lg hover:bg-indigo-500 active:bg-indigo-700 md:text-sm"
               >
@@ -146,8 +148,8 @@ function App() {
                         {item.name}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">{item.email}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{item.position}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{item.salary}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{item.phone}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{item.hobbies}</td>
                       <td className="text-right px-6 whitespace-nowrap">
                         <a href="javascript:void()" className="py-2 px-3 font-medium text-indigo-600 hover:text-indigo-500 duration-150 hover:bg-gray-50 rounded-lg">
                           Edit
