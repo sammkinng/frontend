@@ -1,54 +1,32 @@
 import { useEffect, useState } from "react"
 import './App.css';
 import PopupForm from "./components/Popup";
+import { deleteUser, getAllUsers } from "./service/api";
 
 export interface TableItem {
+  id:number;
   name: string;
   email: string;
-  phone: string;
+  phone_number: string;
   hobbies: string;
 }
 
 function App() {
-  const tableItems: TableItem[] = [
-    {
-      name: "Liam James",
-      email: "liamjames@example.com",
-      phone: "Software engineer",
-      hobbies: "$100K"
-    },
-    {
-      name: "Olivia Emma",
-      email: "oliviaemma@example.com",
-      phone: "Product designer",
-      hobbies: "$90K"
-    },
-    {
-      name: "William Benjamin",
-      email: "william.benjamin@example.com",
-      phone: "Front-end developer",
-      hobbies: "$80K"
-    },
-    {
-      name: "Henry Theodore",
-      email: "henrytheodore@example.com",
-      phone: "Laravel engineer",
-      hobbies: "$120K"
-    },
-    {
-      name: "Amelia Elijah",
-      email: "amelia.elijah@example.com",
-      phone: "Open source manager",
-      hobbies: "$75K"
-    },
-  ]
-
+  const [tableItems, setTableItems] = useState<TableItem[]>([])
   const [editableIndex, setEditableIndex] = useState<null | number>(null)
   const [showPopup, setShowpopup] = useState(false)
-
   const [areAllChecked, setAllChecked] = useState(false)
   let [checkboxItems, setCheckboxItem] = useState<{ [key: string]: boolean }>({});
 
+  useEffect(() => {
+    getAllUsers()
+      .then((users) => {
+        setTableItems(users)
+      })
+      .catch((error) => {
+        console.error('Error fetching all users:', error);
+      });
+  }, [])
   // set or unset all checkbox items
   const handleCheckboxItems = () => {
     setAllChecked(!areAllChecked)
@@ -64,15 +42,23 @@ function App() {
     setCheckboxItem({ ...checkboxItems, [`checkbox${idx}`]: e.target.checked })
   }
 
-  const deleteRow=()=>{
-    console.log('Row Deleted!')
+  const deleteRow = async (id:number) => {
+    await deleteUser(id)
+    window.location.reload()
   }
 
-  const upDateRow=()=>{
+  const upDateRow = () => {
+    if(editableIndex!==null){
+      const editables=document.getElementsByTagName('tr')[editableIndex+1].children
+      console.log(editables[0].children[1].innerHTML)
+      for(let i=1;i<4;i++){
+    console.log(editables[i].innerHTML)
+      }
+    }
     console.log('Row Updated!')
   }
 
-  const sendMail=()=>{
+  const sendMail = () => {
     console.log('mail sent!')
   }
 
@@ -108,7 +94,7 @@ function App() {
               >
                 Add Row
               </button>
-              <button onClick={()=>sendMail()}
+              <button onClick={() => sendMail()}
                 className="inline-block px-4 py-2 text-white duration-150 font-medium bg-red-600 rounded-lg hover:bg-red-500 active:bg-red-700 md:text-sm"
               >
                 Send Mail
@@ -160,22 +146,22 @@ function App() {
                           {item.name}</div>
                       </td>
                       <td className={`px-6 py-4 whitespace-nowrap ${editableIndex === idx ? "text-indigo-600" : ""}`} contentEditable={editableIndex === idx}>{item.email}</td>
-                      <td className={`px-6 py-4 whitespace-nowrap ${editableIndex === idx ? "text-indigo-600" : ""}`} contentEditable={editableIndex === idx}>{item.phone}</td>
+                      <td className={`px-6 py-4 whitespace-nowrap ${editableIndex === idx ? "text-indigo-600" : ""}`} contentEditable={editableIndex === idx}>{item.phone_number}</td>
                       <td className={`px-6 py-4 whitespace-nowrap ${editableIndex === idx ? "text-indigo-600" : ""}`} contentEditable={editableIndex === idx}>{item.hobbies}</td>
                       <td className="text-right px-6 whitespace-nowrap">
-                        <button onClick={()=>{
-                          if(editableIndex===idx){
+                        <button onClick={() => {
+                          if (editableIndex === idx) {
                             upDateRow()
                           }
-                          else{
+                          else {
                             setEditableIndex(idx)
                           }
                         }} className="py-2 px-3 font-medium text-indigo-600 hover:text-indigo-500 duration-150 hover:bg-gray-50 rounded-lg">
                           {editableIndex === idx ? 'Save' : 'Edit'}
                         </button>
-                        <button onClick={()=>{
-                          if(window.confirm("Are you sure to delete this row?")){
-                            deleteRow()
+                        <button onClick={() => {
+                          if (window.confirm("Are you sure to delete this row?")) {
+                            deleteRow(item.id)
                           }
                         }} className="py-2 leading-none px-3 font-medium text-red-600 hover:text-red-500 duration-150 hover:bg-gray-50 rounded-lg">
                           Delete

@@ -7,18 +7,19 @@ interface PopupFormProps {
 
 const PopupForm: React.FC<PopupFormProps> = ({ onClose }) => {
     const [formData, setFormData] = useState<TableItem>({
+        id:0,
         name: '',
         email: '',
-        phone: '',
+        phone_number: '',
         hobbies: ''
     });
 
     const [phoneError, setPhoneError] = useState(false)
     const [mailError, setMailError] = useState(false)
 
-    const addRow=()=>{
+    const addRow = () => {
         console.log('Row Added!')
-      }
+    }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -30,7 +31,7 @@ const PopupForm: React.FC<PopupFormProps> = ({ onClose }) => {
                 setMailError(false)
             }
         }
-        else if (e.target.name === 'phone') {
+        else if (e.target.name === 'phone_number') {
             if (!validatePhoneNumber(e.target.value)) {
                 setPhoneError(true)
             } else {
@@ -102,15 +103,15 @@ const PopupForm: React.FC<PopupFormProps> = ({ onClose }) => {
                         {mailError && <div className='text-red-600'>Invalid Email</div>}
                     </div>
                     <div className="mb-4">
-                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="phone_number" className="block text-sm font-medium text-gray-700">
                             Phone Number
                         </label>
                         <input
                             type="text"
-                            id="phone"
-                            name="phone"
+                            id="phone_number"
+                            name="phone_number"
                             required
-                            value={formData.phone}
+                            value={formData.phone_number}
                             onChange={handleChange}
                             placeholder='Enter 10 digit number'
                             className="mt-1 p-2 border rounded-md w-full"
