@@ -4,11 +4,12 @@ import { createUser } from '../service/api';
 
 interface PopupFormProps {
     onClose: () => void;
+    showLoader: () => void;
 }
 
-const PopupForm: React.FC<PopupFormProps> = ({ onClose }) => {
+const PopupForm: React.FC<PopupFormProps> = ({ onClose, showLoader }) => {
     const [formData, setFormData] = useState<TableItem>({
-        id:0,
+        id: 0,
         name: '',
         email: '',
         phone_number: '',
@@ -18,7 +19,8 @@ const PopupForm: React.FC<PopupFormProps> = ({ onClose }) => {
     const [phoneError, setPhoneError] = useState(false)
     const [mailError, setMailError] = useState(false)
 
-    const addRow = async() => {
+    const addRow = async () => {
+        showLoader()
         await createUser(formData)
         window.location.reload()
         console.log('Row Added!')

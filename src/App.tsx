@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import './App.css';
 import PopupForm from "./components/Popup";
 import { deleteUser, getAllUsers, sendEmail, updateUser } from "./service/api";
+import Loader from "./components/Loader";
 
 export interface TableItem {
   id: number;
@@ -12,6 +13,7 @@ export interface TableItem {
 }
 
 function App() {
+  const [showLoader, setShowLoader] = useState(true)
   const [tableItems, setTableItems] = useState<TableItem[]>([])
   const [editableIndex, setEditableIndex] = useState<null | number>(null)
   const [showPopup, setShowpopup] = useState(false)
@@ -22,18 +24,20 @@ function App() {
     getAllUsers()
       .then((users) => {
         setTableItems(users)
+        setShowLoader(false)
       })
       .catch((error) => {
         console.error('Error fetching all users:', error);
       });
   }, [])
+
   // set or unset all checkbox items
   const handleCheckboxItems = () => {
     if (areAllChecked) {
       setCheckboxItem(new Set())
     }
     else {
-      const set:Set<number> = new Set()
+      const set: Set<number> = new Set()
       tableItems.forEach((item, idx) => {
         set.add(item.id)
       })
@@ -44,26 +48,27 @@ function App() {
 
   // Update checked value
   const handleCheckboxChange = (id: number) => {
-    console.log(id,checkboxItems.has(id))
-    if(checkboxItems.has(id)){
+    console.log(id, checkboxItems.has(id))
+    if (checkboxItems.has(id)) {
       setAllChecked(false)
       checkboxItems.delete(id)
     }
-    else{
+    else {
       checkboxItems.add(id)
     }
-   
+
     setCheckboxItem(new Set(checkboxItems))
   }
 
   const deleteRow = async (id: number) => {
+    setShowLoader(true)
     await deleteUser(id)
     window.location.reload()
   }
 
   const upDateRow = async () => {
     if (editableIndex !== null) {
-
+      setShowLoader(true)
       const editables = document.getElementsByTagName('tr')[editableIndex + 1].children
 
       await updateUser(tableItems[editableIndex].id, {
@@ -78,17 +83,20 @@ function App() {
 
   }
 
-  const sendMail = async() => {
-    const res=await sendEmail({
-      email:"test@testmail.com",
-      ids:Array.from(checkboxItems)
+  const sendMail = async () => {
+    setShowLoader(true)
+    const res = await sendEmail({
+      email: "test@testmail.com",
+      ids: Array.from(checkboxItems)
     })
+    setShowLoader(false)
     window.open(res)
   }
 
   return (
     <div className="App pt-10">
-      {showPopup && <PopupForm onClose={() => setShowpopup(false)} />}
+      {showLoader && <Loader />}
+      {showPopup && <PopupForm onClose={() => setShowpopup(false)} showLoader={() => setShowLoader(true)} />}
       <header>
         <div className="max-w-screen-xl mx-auto px-4 md:px-8">
           <div className="items-start justify-between md:flex">
