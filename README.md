@@ -48,5 +48,9 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 # REDPOSITIVE ASSIGNMENT 
 
-Frontend URL:
+Frontend URL: https://frontend-assignment-redpositive.vercel.app/
+
+Backend Repo: https://github.com/sammkinng/backend
+
+# WALKTHROUGH URL: https://www.loom.com/share/cb605344d3cd44fc8ca903435543030d?sid=636db9c0-e72d-4697-ac08-6fa6fe5431bd
 
