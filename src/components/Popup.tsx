@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TableItem } from '../App';
+import { createUser } from '../service/api';
 
 interface PopupFormProps {
     onClose: () => void;
@@ -17,7 +18,9 @@ const PopupForm: React.FC<PopupFormProps> = ({ onClose }) => {
     const [phoneError, setPhoneError] = useState(false)
     const [mailError, setMailError] = useState(false)
 
-    const addRow = () => {
+    const addRow = async() => {
+        await createUser(formData)
+        window.location.reload()
         console.log('Row Added!')
     }
 
@@ -63,7 +66,7 @@ const PopupForm: React.FC<PopupFormProps> = ({ onClose }) => {
     }
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10 text-base">
             <div className="bg-white p-8 rounded-md">
                 <button className="absolute top-4 right-4 text-gray-100 font-black" onClick={onClose}>
                     X
@@ -129,7 +132,7 @@ const PopupForm: React.FC<PopupFormProps> = ({ onClose }) => {
                             name="hobbies"
                             value={formData.hobbies}
                             onChange={handleChange}
-                            placeholder='Seperate Each Hobby with Comma'
+                            placeholder='Seperate Each Hobby with ","'
                             className="mt-1 p-2 border rounded-md w-full"
                         />
                     </div>

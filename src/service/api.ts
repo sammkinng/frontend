@@ -1,4 +1,3 @@
-import { TableItem } from "../App"
 import axios from 'axios';
 
 const API_BASE_URL='https://backend-f2dq.onrender.com'
@@ -62,7 +61,7 @@ export const deleteUser = async (userId: number): Promise<void> => {
 export const sendEmail = async (emailData: any): Promise<string> => {
   try {
     const response = await axios.post(`${API_BASE_URL}/users/send-email`, emailData);
-    return response.data;
+    return response.data.etherealURL;
   } catch (error) {
     console.error('Error sending email:', error);
     throw error;

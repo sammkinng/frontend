@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 import './App.css';
 import PopupForm from "./components/Popup";
-import { deleteUser, getAllUsers } from "./service/api";
+import { deleteUser, getAllUsers, sendEmail, updateUser } from "./service/api";
 
 export interface TableItem {
-  id:number;
+  id: number;
   name: string;
   email: string;
   phone_number: string;
@@ -16,7 +16,7 @@ function App() {
   const [editableIndex, setEditableIndex] = useState<null | number>(null)
   const [showPopup, setShowpopup] = useState(false)
   const [areAllChecked, setAllChecked] = useState(false)
-  let [checkboxItems, setCheckboxItem] = useState<{ [key: string]: boolean }>({});
+  const [checkboxItems, setCheckboxItem] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     getAllUsers()
@@ -29,53 +29,62 @@ function App() {
   }, [])
   // set or unset all checkbox items
   const handleCheckboxItems = () => {
+    if (areAllChecked) {
+      setCheckboxItem(new Set())
+    }
+    else {
+      const set:Set<number> = new Set()
+      tableItems.forEach((item, idx) => {
+        set.add(item.id)
+      })
+      setCheckboxItem(set)
+    }
     setAllChecked(!areAllChecked)
-    tableItems.forEach((item, idx) => {
-      checkboxItems[`checkbox${idx}`] = !areAllChecked
-      setCheckboxItem({ ...checkboxItems })
-    })
   }
 
   // Update checked value
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, idx: number) => {
-    setAllChecked(false)
-    setCheckboxItem({ ...checkboxItems, [`checkbox${idx}`]: e.target.checked })
+  const handleCheckboxChange = (id: number) => {
+    console.log(id,checkboxItems.has(id))
+    if(checkboxItems.has(id)){
+      setAllChecked(false)
+      checkboxItems.delete(id)
+    }
+    else{
+      checkboxItems.add(id)
+    }
+   
+    setCheckboxItem(new Set(checkboxItems))
   }
 
-  const deleteRow = async (id:number) => {
+  const deleteRow = async (id: number) => {
     await deleteUser(id)
     window.location.reload()
   }
 
-  const upDateRow = () => {
-    if(editableIndex!==null){
-      const editables=document.getElementsByTagName('tr')[editableIndex+1].children
-      console.log(editables[0].children[1].innerHTML)
-      for(let i=1;i<4;i++){
-    console.log(editables[i].innerHTML)
-      }
+  const upDateRow = async () => {
+    if (editableIndex !== null) {
+
+      const editables = document.getElementsByTagName('tr')[editableIndex + 1].children
+
+      await updateUser(tableItems[editableIndex].id, {
+        name: editables[0].children[1].innerHTML,
+        phone_number: editables[2].innerHTML,
+        email: editables[1].innerHTML,
+        hobbies: editables[3].innerHTML
+      })
+      window.location.reload()
+      console.log('Row Updated!')
     }
-    console.log('Row Updated!')
+
   }
 
-  const sendMail = () => {
-    console.log('mail sent!')
-  }
-
-  useEffect(() => {
-    // Set properties with false value
-    tableItems.forEach((item, idx) => {
-      checkboxItems[`checkbox${idx}`] = false
-      setCheckboxItem({ ...checkboxItems })
+  const sendMail = async() => {
+    const res=await sendEmail({
+      email:"test@testmail.com",
+      ids:Array.from(checkboxItems)
     })
-  }, [])
-
-  useEffect(() => {
-    // Check if all checkbox items are checked and update setAllChecked state
-    const checkboxItemsVal = Object.values(checkboxItems)
-    const checkedItems = checkboxItemsVal.filter(item => item == true)
-    if (checkedItems.length == tableItems.length) setAllChecked(true)
-  }, [checkboxItems])
+    window.open(res)
+  }
 
   return (
     <div className="App pt-10">
@@ -133,8 +142,8 @@ function App() {
                       <td className="px-6 py-4 whitespace-nowrap flex items-center gap-x-4">
                         <div>
                           <input type="checkbox" id={`checkbox-${idx}`} name={`checkbox-${idx}`} className="checkbox-item peer hidden"
-                            checked={checkboxItems[`checkbox${idx}`]}
-                            onChange={(e) => handleCheckboxChange(e, idx)}
+                            checked={checkboxItems.has(item.id)}
+                            onChange={(e) => handleCheckboxChange(item.id)}
                           />
                           <label
                             htmlFor={`checkbox-${idx}`}
